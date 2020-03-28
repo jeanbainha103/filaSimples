@@ -1,14 +1,14 @@
 public class Main {
     public static void main(String args[]) {
         int nServidor = 1;
-        int tFila = 3;
+        int nFila = 3;
         float chegadaMin = 1;
         float chegadaMax = 3;
         float saidaMin = 2;
         float saidaMax = 6;
-        Simulador sim = new Simulador(nServidor, tFila, chegadaMin, chegadaMax, saidaMin, saidaMax);
-        sim.importNumbers(geraNum(10));
-        //sim.executa();
+        Simulador sim = new Simulador(nServidor, nFila, chegadaMin, chegadaMax, saidaMin, saidaMax);
+        sim.importNumbers(geraNum(100000));
+        sim.executa();
     }
 
     private static float[] geraNum(int tamanho) {

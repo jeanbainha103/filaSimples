@@ -74,7 +74,7 @@ public class Simulador {
         estadosFila[filaAtual] = estadosFila[filaAtual] + tempo - tempoExecucao;
         tempoExecucao = tempo;
         filaAtual--;
-        if (filaAtual >= 1) {
+        if (filaAtual >= nServidor) {
             listaEventos.add(new Eventos(Eventos.tipos.saida, tempoExecucao + ((saidaMax - saidaMin) * aleatorio + saidaMin)));
         }
     }

@@ -1,6 +1,6 @@
 public class Eventos {
     public enum tipos {
-        chegada, saida;
+        chegada, saida
     }
     private tipos tipo;
     private float tempo;

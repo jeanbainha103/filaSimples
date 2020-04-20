@@ -1,6 +1,8 @@
+package com.jeanbainha;
+
 public class Eventos {
     public enum tipos {
-        chegada, saida
+        chegada, saidaInterna, saidaFinal
     }
     private tipos tipo;
     private float tempo;

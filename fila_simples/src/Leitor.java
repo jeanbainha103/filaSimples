@@ -1,3 +1,5 @@
+package com.jeanbainha;
+
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 
@@ -34,6 +36,18 @@ public class Leitor {
 
             linhaPercorrida = reader.readLine();
             leitura.setSaidaMaxima(parseFloat(linhaPercorrida));
+
+            linhaPercorrida = reader.readLine();
+            leitura.setNumeroServidores2(parseInt(linhaPercorrida));
+
+            linhaPercorrida = reader.readLine();
+            leitura.setNumeroFila2(parseInt(linhaPercorrida));
+
+            linhaPercorrida = reader.readLine();
+            leitura.setSaidaFinalMinima(parseFloat(linhaPercorrida));
+
+            linhaPercorrida = reader.readLine();
+            leitura.setSaidaFinalMaxima(parseFloat(linhaPercorrida));
 
             linhaPercorrida = reader.readLine();
             leitura.setTamanho(parseInt(linhaPercorrida));

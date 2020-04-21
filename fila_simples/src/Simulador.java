@@ -1,5 +1,6 @@
-package com.jeanbainha;
 
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -21,7 +22,6 @@ public class Simulador {
     private float tempoExecucao;
     private int filaAtual1;
     private int filaAtual2;
-    private int hold = 0;
 
     public Simulador(int s1, int f1, float cmin, float cmax, float smin, float smax, int s2, int f2, float sfmin, float sfmax) {
         nServidor1 = s1;
@@ -42,25 +42,24 @@ public class Simulador {
 
     public void executa() {
         listaEventos.add(new Eventos(Eventos.tipos.chegada, 3));
-        for (int i = 0; i < aleatorios.length; i++) {
+        for (float aleatorio : aleatorios) {
             Eventos e = pegaProximoEvento();
             if (e != null) {
                 if (e.getTipo() == Eventos.tipos.chegada) {
-                    chegada(e.getTempo(), aleatorios[i]);
+                    chegada(e.getTempo(), aleatorio);
                 } else if (e.getTipo() == Eventos.tipos.saidaInterna) {
-                    saidaInterna(e.getTempo(), aleatorios[i]);
+                    saidaInterna(e.getTempo(), aleatorio);
                 } else if (e.getTipo() == Eventos.tipos.saidaFinal) {
-                    saidaFinal(e.getTempo(), aleatorios[i]);
+                    saidaFinal(e.getTempo(), aleatorio);
                 }
                 System.out.println(e.getTipo() + " - " + e.getTempo());
                 System.out.println("fila1 - " + filaAtual1);
                 System.out.println("fila2 - " + filaAtual2);
-                System.out.println("fila espera - " + hold);
             }
         }
         for (int i = 0; i<estadosFila.length; i++) {
             for (int j = 0; j<estadosFila[i].length; j++) {
-                System.out.println("Estado: [" + i + "," + j + "] " + estadosFila[i][j] / tempoExecucao);
+                System.out.println("Estado: [" + i + "," + j + "] " + String.format("%f", (estadosFila[i][j] / tempoExecucao)));
             }
         }
         System.out.println(tempoExecucao);

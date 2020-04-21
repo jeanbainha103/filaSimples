@@ -1,4 +1,3 @@
-package com.jeanbainha;
 
 public class Leitura {
 

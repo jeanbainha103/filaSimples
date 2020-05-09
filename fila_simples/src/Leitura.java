@@ -1,104 +1,77 @@
+import java.util.List;
 
 public class Leitura {
 
-    private int numeroServidores;
-    private int numeroFila;
-    private float chegadaMinima;
-    private float chegadaMaxima;
-    private float saidaMinima;
-    private float saidaMaxima;
-    private int numeroServidores2;
-    private int numeroFila2;
-    private float saidaFinalMinima;
-    private float saidaFinalMaxima;
-    private int tamanho;
+    private int numeroFilas;
+    private List<Integer> capacidadeFila;
+    private List<Integer>  numeroServidores;
+    private List<Float>  chegadaMinima;
+    private List<Float> chegadaMaxima;
+    private List<Float> saidaMinima;
+    private List<Float> saidaMaxima;
+    private List<List<Integer>>  saidaFila;
 
-    public int getNumeroServidores() {
+    public int getNumeroFilas() {
+        return numeroFilas;
+    }
+
+    public void setNumeroFilas(int numeroFilas) {
+        this.numeroFilas = numeroFilas;
+    }
+
+    public List<Integer> getCapacidadeFila() {
+        return capacidadeFila;
+    }
+
+    public void setCapacidadeFila(List<Integer> capacidadeFila) {
+        this.capacidadeFila = capacidadeFila;
+    }
+
+    public List<Integer> getNumeroServidores() {
         return numeroServidores;
     }
 
-    public void setNumeroServidores(int numeroServidores) {
+    public void setNumeroServidores(List<Integer> numeroServidores) {
         this.numeroServidores = numeroServidores;
     }
 
-    public int getNumeroFila() {
-        return numeroFila;
-    }
-
-    public void setNumeroFila(int numeroFila) {
-        this.numeroFila = numeroFila;
-    }
-
-    public float getChegadaMinima() {
+    public List<Float> getChegadaMinima() {
         return chegadaMinima;
     }
 
-    public void setChegadaMinima(float chegadaMinima) {
+    public void setChegadaMinima(List<Float> chegadaMinima) {
         this.chegadaMinima = chegadaMinima;
     }
 
-    public float getChegadaMaxima() {
+    public List<Float> getChegadaMaxima() {
         return chegadaMaxima;
     }
 
-    public void setChegadaMaxima(float chegadaMaxima) {
+    public void setChegadaMaxima(List<Float> chegadaMaxima) {
         this.chegadaMaxima = chegadaMaxima;
     }
 
-    public float getSaidaMinima() {
+    public List<Float> getSaidaMinima() {
         return saidaMinima;
     }
 
-    public void setSaidaMinima(float saidaMinima) {
+    public void setSaidaMinima(List<Float> saidaMinima) {
         this.saidaMinima = saidaMinima;
     }
 
-    public float getSaidaMaxima() {
+    public List<Float> getSaidaMaxima() {
         return saidaMaxima;
     }
 
-    public void setSaidaMaxima(float saidaMaxima) {
+    public void setSaidaMaxima(List<Float> saidaMaxima) {
         this.saidaMaxima = saidaMaxima;
     }
 
-    public int getNumeroServidores2() {
-        return numeroServidores2;
+    public List<List<Integer>> getSaidaFila() {
+        return saidaFila;
     }
 
-    public void setNumeroServidores2(int numeroServidores2) {
-        this.numeroServidores2 = numeroServidores2;
+    public void setSaidaFila(List<Integer> saidaFila) {
+        this.saidaFila.add( saidaFila);
     }
-
-    public int getNumeroFila2() {
-        return numeroFila2;
-    }
-
-    public void setNumeroFila2(int numeroFila2) {
-        this.numeroFila2 = numeroFila2;
-    }
-
-    public float getSaidaFinalMinima() {
-        return saidaFinalMinima;
-    }
-
-    public float getSaidaFinalMaxima() {
-        return saidaFinalMaxima;
-    }
-
-    public void setSaidaFinalMinima(float saidaFinalMinima) {
-        this.saidaFinalMinima = saidaFinalMinima;
-    }
-
-    public void setSaidaFinalMaxima(float saidaFinalMaxima) {
-        this.saidaFinalMaxima = saidaFinalMaxima;
-    }
-
-    public int getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(int tamanho) {
-        this.tamanho = tamanho;
-    }
-
 }

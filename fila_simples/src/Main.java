@@ -3,7 +3,8 @@
 public class Main {
     public static void main(String[] args) {
         Leitura leitura = Leitor.lerValores();
-        Simulador sim = new Simulador(
+       // criarFilas(leitura);
+      /*  Simulador sim = new Simulador(
                 leitura.getNumeroServidores(),
                 leitura.getNumeroFila(),
                 leitura.getChegadaMinima(),
@@ -14,10 +15,11 @@ public class Main {
                 leitura.getNumeroFila2(),
                 leitura.getSaidaFinalMinima(),
                 leitura.getSaidaFinalMaxima()
-        );
+        );*/
 
-        sim.importarNumberos(geraNum(leitura.getTamanho()));
-        sim.executa();
+       // sim.importarNumberos(geraNum(leitura.getTamanho()));
+       // sim.executa();
+        System.out.println();
     }
 
     private static float[] geraNum(int tamanho) {

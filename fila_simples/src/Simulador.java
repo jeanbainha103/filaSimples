@@ -1,65 +1,148 @@
-
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
 
 public class Simulador {
-    private int nServidor1;
-    private int tamanhoFila1;
-    private float chegadaMin;
-    private float chegadaMax;
-    private float saidaMin;
-    private float saidaMax;
-    private int nServidor2;
-    private int tamanhoFila2;
-    private float saidaFinalMin;
-    private float saidaFinalMax;
-    private float[][] estadosFila;
     ArrayList<Eventos> listaEventos;
-    Random r = new Random();
     private float[] aleatorios;
+    private int countAleatorio;
     private float tempoExecucao;
-    private int filaAtual1;
-    private int filaAtual2;
+    private boolean[] filaInicial;
+    Fila[] filas;
+    private int perdas;
 
-    public Simulador(int s1, int f1, float cmin, float cmax, float smin, float smax, int s2, int f2, float sfmin, float sfmax) {
-        nServidor1 = s1;
-        tamanhoFila1 = f1;
-        chegadaMin = cmin;
-        chegadaMax = cmax;
-        saidaMin = smin;
-        saidaMax = smax;
-        nServidor2 = s2;
-        tamanhoFila2 = f2;
-        saidaFinalMin = sfmin;
-        saidaFinalMax = sfmax;
-        estadosFila = new float[tamanhoFila1 + 1][tamanhoFila2 + 1];
+
+    public Simulador(Fila[] filas) {
+        this.filas = filas;
+        filaInicial = new boolean[filas.length];
+        for (int i = 0; i < filas.length; i++) {
+            filas[i].setEstadoAtual(0);
+            if (filas[i].getChegadaMinima() > 0)
+                filaInicial[i] = true;
+
+
+        }
         listaEventos = new ArrayList<>();
-        filaAtual1 = 0;
-        filaAtual2= 0;
+    }
+
+    public void atualizaEstados(float tempo) {
+        for (Fila f : filas) {
+            try {
+                f.atualisaEstado(f.getEstadoAtual(), tempo - tempoExecucao);
+            } catch (Exception e) {
+                f.addEstado(tempo - tempoExecucao);
+            }
+        }
+    }
+
+    public void chegada(float tempo) {
+        for (int i = 0; i < filaInicial.length; i++) {
+            if (filaInicial[i]) {
+                atualizaEstados(tempo);
+                tempoExecucao = tempo;
+                if (filas[i].getTamanhoFila() == -1 || filas[i].getEstadoAtual() < filas[i].getTamanhoFila()) {
+                    filas[i].setEstadoAtual(filas[i].getEstadoAtual() + 1);
+                    if (filas[i].getEstadoAtual() <= filas[i].getNumeroServidores()) {
+                        listaEventos.add(new Eventos(Eventos.tipos.saida,
+                                filas[i].getIdFila(),
+                                tempoExecucao + ((filas[i].getSaidaMaxima() - filas[i].getSaidaminima() * aleatorios[countAleatorio] + filas[i].getSaidaminima()))));
+                        countAleatorio++;
+                    }
+                }
+                listaEventos.add(new Eventos(Eventos.tipos.chegada,
+                        filas[i].getIdFila(),
+                        tempoExecucao + ((filas[i].getChegadaMaxima() - filas[i].getChegadaMinima()) * aleatorios[0] + filas[i].getChegadaMinima())));
+            }
+        }
+    }
+
+    public void chegada(float tempo, int fila) {
+        atualizaEstados(tempo);
+        tempoExecucao = tempo;
+        if (filas[fila - 1].getTamanhoFila() == -1 || filas[fila - 1].getEstadoAtual() < filas[fila - 1].getTamanhoFila()) {
+            filas[fila - 1].setEstadoAtual(filas[fila - 1].getEstadoAtual() + 1);
+            if (filas[fila - 1].getEstadoAtual() <= filas[fila - 1].getNumeroServidores()) {
+                listaEventos.add(new Eventos(Eventos.tipos.saida,
+                        filas[fila - 1].getIdFila(),
+                        tempoExecucao + ((filas[fila - 1].getSaidaMaxima() - filas[fila - 1].getSaidaminima() * aleatorios[countAleatorio] + filas[fila - 1].getSaidaminima()))));
+                countAleatorio++;
+            }
+        } else {
+            perdas++;
+        }
+        listaEventos.add(new Eventos(Eventos.tipos.chegada,
+                filas[fila - 1].getIdFila(),
+                tempoExecucao + ((filas[fila - 1].getChegadaMaxima() - filas[fila - 1].getChegadaMinima()) * aleatorios[0] + filas[fila - 1].getChegadaMinima())));
+    }
+
+    private void saida(float tempo, int fila) {
+        atualizaEstados(tempo);
+        tempoExecucao = tempo;
+        int saida = calculaProb(fila - 1);
+        if (saida == 0) {
+            countAleatorio++;
+            filas[fila - 1].setEstadoAtual(filas[fila - 1].getEstadoAtual() - 1);
+            if (countAleatorio < aleatorios.length) {
+                if (filas[fila - 1].getEstadoAtual() >= filas[fila - 1].getNumeroServidores()) {
+                    listaEventos.add(new Eventos(Eventos.tipos.saida, fila,
+                            tempoExecucao + ((filas[fila - 1].getSaidaMaxima() - filas[fila - 1].getSaidaminima()) * aleatorios[countAleatorio] + filas[fila - 1].getSaidaminima())));
+                    countAleatorio++;
+                }
+            }
+        } else if (filas[saida - 1].getEstadoAtual() < filas[saida - 1].getTamanhoFila()) {
+            countAleatorio++;
+            if (countAleatorio < aleatorios.length) {
+                filas[fila - 1].setEstadoAtual(filas[fila - 1].getEstadoAtual() - 1);
+                filas[saida - 1].setEstadoAtual(filas[saida - 1].getEstadoAtual() + 1);
+                if (filas[fila - 1].getEstadoAtual() >= filas[fila - 1].getNumeroServidores()) {
+                    listaEventos.add(new Eventos(Eventos.tipos.saida, fila,
+                            tempoExecucao + ((filas[fila - 1].getSaidaMaxima() - filas[fila - 1].getSaidaminima()) * aleatorios[countAleatorio] + filas[fila - 1].getSaidaminima())));
+                    countAleatorio++;
+                }
+                if (filas[saida - 1].getEstadoAtual() <= filas[saida - 1].getNumeroServidores()) {
+                    listaEventos.add(new Eventos(Eventos.tipos.saida, saida,
+                            tempoExecucao + ((filas[saida - 1].getSaidaMaxima() - filas[saida - 1].getSaidaminima()) * aleatorios[countAleatorio] + filas[saida - 1].getSaidaminima())));
+                    countAleatorio++;
+                }
+            }
+        } else {
+            listaEventos.add(new Eventos(Eventos.tipos.saida, fila,
+                    tempoExecucao + ((filas[fila - 1].getSaidaMaxima() - filas[fila - 1].getSaidaminima()) * aleatorios[countAleatorio] + filas[fila - 1].getSaidaminima())));
+            countAleatorio++;
+        }
+    }
+
+    private int calculaProb(int fila) {
+        List<Float> prob = filas[fila].getProbalidade();
+        float proabilidadeAcumulada = 0;
+        for (int i = 0; i < prob.size(); i++) {
+            proabilidadeAcumulada = proabilidadeAcumulada + prob.get(i);
+            if (aleatorios[countAleatorio] < proabilidadeAcumulada) {
+                return filas[fila].getSaidas().get(i);
+            }
+        }
+        return 0;
     }
 
     public void executa() {
-        listaEventos.add(new Eventos(Eventos.tipos.chegada, 3));
-        for (float aleatorio : aleatorios) {
+        listaEventos.add(new Eventos(Eventos.tipos.chegadaInicial, 1, 1));
+        for (countAleatorio = 0; countAleatorio < aleatorios.length; countAleatorio++) {
             Eventos e = pegaProximoEvento();
             if (e != null) {
-                if (e.getTipo() == Eventos.tipos.chegada) {
-                    chegada(e.getTempo(), aleatorio);
-                } else if (e.getTipo() == Eventos.tipos.saidaInterna) {
-                    saidaInterna(e.getTempo(), aleatorio);
-                } else if (e.getTipo() == Eventos.tipos.saidaFinal) {
-                    saidaFinal(e.getTempo(), aleatorio);
+                if (e.getTipo() == Eventos.tipos.chegadaInicial) {
+                    chegada(e.getTempo());
+                } else if (e.getTipo() == Eventos.tipos.chegada) {
+                    chegada(e.getTempo(), e.getFila());
+                } else if (e.getTipo() == Eventos.tipos.saida) {
+                    saida(e.getTempo(), e.getFila());
                 }
+                System.out.println("-------------------------------------------------------------------------------------");
                 System.out.println(e.getTipo() + " - " + e.getTempo());
-                System.out.println("fila1 - " + filaAtual1);
-                System.out.println("fila2 - " + filaAtual2);
-            }
-        }
-        for (int i = 0; i<estadosFila.length; i++) {
-            for (int j = 0; j<estadosFila[i].length; j++) {
-                System.out.println("Estado: [" + i + "," + j + "] " + String.format("%f", (estadosFila[i][j] / tempoExecucao)));
+                for (Fila f : filas) {
+                    System.out.println("Fila - " + f.getIdFila());
+                    System.out.println("Estdo atual - " + f.getEstadoAtual());
+                    System.out.println("Estados - " + f.getEstados().toString());
+                    System.out.println("Perdas - " + perdas + " clientes");
+                }
             }
         }
         System.out.println(tempoExecucao);
@@ -76,45 +159,6 @@ public class Simulador {
             return menor;
         } else {
             return null;
-        }
-    }
-
-    private void chegada(float tempo, float aleatorio) {
-        estadosFila[filaAtual1][filaAtual2] = estadosFila[filaAtual1][filaAtual2] + tempo - tempoExecucao;
-        tempoExecucao = tempo;
-        if (filaAtual1 < tamanhoFila1) {
-            filaAtual1++;
-            if (filaAtual1 <= nServidor1) {
-                listaEventos.add(new Eventos(Eventos.tipos.saidaInterna, tempoExecucao + ((saidaMax - saidaMin) * aleatorio + saidaMin)));
-            }
-        }
-        listaEventos.add(new Eventos(Eventos.tipos.chegada, tempoExecucao + ((chegadaMax - chegadaMin) * aleatorio + chegadaMin)));
-    }
-
-    private void saidaInterna(float tempo, float aleatorio) {
-        estadosFila[filaAtual1][filaAtual2] = estadosFila[filaAtual1][filaAtual2] + tempo - tempoExecucao;
-        tempoExecucao = tempo;
-        if (filaAtual2 < tamanhoFila2) {
-            filaAtual1--;
-            filaAtual2++;
-            if (filaAtual1 >= nServidor1) {
-                listaEventos.add(new Eventos(Eventos.tipos.saidaInterna, tempoExecucao + ((saidaMax - saidaMin) * aleatorio + saidaMin)));
-            }
-            if (filaAtual2 <= nServidor2) {
-                listaEventos.add(new Eventos(Eventos.tipos.saidaFinal, tempoExecucao + ((saidaFinalMax - saidaFinalMin) * aleatorio + saidaFinalMin)));
-            }
-        } else {
-            listaEventos.add(new Eventos(Eventos.tipos.saidaInterna, tempoExecucao + ((saidaMax - saidaMin) * aleatorio + saidaMin)));
-        }
-
-    }
-
-    private void saidaFinal(float tempo, float aleatorio) {
-        estadosFila[filaAtual1][filaAtual2] = estadosFila[filaAtual1][filaAtual2] + tempo - tempoExecucao;
-        tempoExecucao = tempo;
-        filaAtual2--;
-        if (filaAtual2 >= nServidor2) {
-            listaEventos.add(new Eventos(Eventos.tipos.saidaFinal, tempoExecucao + ((saidaFinalMax - saidaFinalMin) * aleatorio + saidaFinalMin)));
         }
     }
 

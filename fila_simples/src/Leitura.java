@@ -72,6 +72,6 @@ public class Leitura {
     }
 
     public void setSaidaFila(List<Integer> saidaFila) {
-        this.saidaFila.add( saidaFila);
+        this.saidaFila.add(saidaFila);
     }
 }

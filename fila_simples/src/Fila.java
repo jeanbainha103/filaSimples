@@ -1,30 +1,29 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Fila {
     private int idFila;
     private int tamanhoFila;
     private int numeroServidores;
-    private int probalidade;
-    private long chegadaMinima;
-    private long chegadaMaxima;
-    private long saidaminima;
-    private long saidaMaxima;
-    private List<Float> estados;
-    private List<Fila> saidas;
+    private List<Float> probalidade;
+    private Float chegadaMinima;
+    private Float chegadaMaxima;
+    private Float saidaminima;
+    private Float saidaMaxima;
+    private ArrayList<Float> estados;
+    private int estadoAtual;
+    private ArrayList<Integer> saidas;
 
-    public Fila(int idFila, int tamanhoFila, int numeroServidores, int probalidade,
-                long chegadaMinima, long chegadaMaxima, long saidaminima, long saidaMaxima,
-                List<Float> estados, List<Fila> saidas) {
-        this.idFila = idFila;
-        this.tamanhoFila = tamanhoFila;
-        this.numeroServidores = numeroServidores;
-        this.probalidade = probalidade;
-        this.chegadaMinima = chegadaMinima;
-        this.chegadaMaxima = chegadaMaxima;
-        this.saidaminima = saidaminima;
-        this.saidaMaxima = saidaMaxima;
-        this.estados = estados;
-        this.saidas = saidas;
+    public void setEstadoAtual(int estadoAtual) {
+        this.estadoAtual = estadoAtual;
+    }
+
+    public int getEstadoAtual() {
+        return estadoAtual;
+    }
+
+    public Fila() {
+        estados = new ArrayList<>();
     }
 
     public int getIdFila() {
@@ -51,43 +50,35 @@ public class Fila {
         this.numeroServidores = numeroServidores;
     }
 
-    public int getProbalidade() {
-        return probalidade;
-    }
-
-    public void setProbalidade(int probalidade) {
-        this.probalidade = probalidade;
-    }
-
-    public long getChegadaMinima() {
+    public Float getChegadaMinima() {
         return chegadaMinima;
     }
 
-    public void setChegadaMinima(long chegadaMinima) {
+    public void setChegadaMinima(Float chegadaMinima) {
         this.chegadaMinima = chegadaMinima;
     }
 
-    public long getChegadaMaxima() {
+    public Float getChegadaMaxima() {
         return chegadaMaxima;
     }
 
-    public void setChegadaMaxima(long chegadaMaxima) {
+    public void setChegadaMaxima(Float chegadaMaxima) {
         this.chegadaMaxima = chegadaMaxima;
     }
 
-    public long getSaidaminima() {
+    public Float getSaidaminima() {
         return saidaminima;
     }
 
-    public void setSaidaminima(long saidaminima) {
+    public void setSaidaminima(Float saidaminima) {
         this.saidaminima = saidaminima;
     }
 
-    public long getSaidaMaxima() {
+    public Float getSaidaMaxima() {
         return saidaMaxima;
     }
 
-    public void setSaidaMaxima(long saidaMaxima) {
+    public void setSaidaMaxima(Float saidaMaxima) {
         this.saidaMaxima = saidaMaxima;
     }
 
@@ -95,15 +86,32 @@ public class Fila {
         return estados;
     }
 
-    public void setEstados(List<Float> estados) {
+    public void setEstados(ArrayList<Float> estados) {
         this.estados = estados;
     }
 
-    public List<Fila> getSaidas() {
+    public void addEstado(float valor) {
+        this.estados.add(valor);
+    }
+
+    public void atualisaEstado(int id, float valor) {
+        this.estados.set(id,this.estados.get(id) + valor);
+    }
+
+    public List<Integer> getSaidas() {
         return saidas;
     }
 
-    public void setSaidas(List<Fila> saidas) {
+    public void setSaidas(ArrayList<Integer> saidas) {
         this.saidas = saidas;
     }
+
+    public List<Float> getProbalidade() {
+        return probalidade;
+    }
+
+    public void setProbalidade(List<Float> probalidade) {
+        this.probalidade = probalidade;
+    }
+
 }

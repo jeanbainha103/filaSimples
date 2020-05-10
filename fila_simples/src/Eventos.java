@@ -1,12 +1,14 @@
 
 public class Eventos {
     public enum tipos {
-        chegada, saidaInterna, saidaFinal
+        chegada, chegadaInicial, saida, saidaFinal
     }
     private tipos tipo;
+    private int fila;
     private float tempo;
-    public Eventos (tipos tipo, float tempo){
+    public Eventos (tipos tipo, int fila, float tempo){
         this.tipo = tipo;
+        this.fila = fila;
         this.tempo = tempo;
     }
 
@@ -16,5 +18,9 @@ public class Eventos {
 
     public tipos getTipo() {
         return tipo;
+    }
+
+    public int getFila() {
+        return fila;
     }
 }

@@ -2,23 +2,11 @@
 
 public class Main {
     public static void main(String[] args) {
-        Leitura leitura = Leitor.lerValores();
-       // criarFilas(leitura);
-      /*  Simulador sim = new Simulador(
-                leitura.getNumeroServidores(),
-                leitura.getNumeroFila(),
-                leitura.getChegadaMinima(),
-                leitura.getChegadaMaxima(),
-                leitura.getSaidaMinima(),
-                leitura.getSaidaMaxima(),
-                leitura.getNumeroServidores2(),
-                leitura.getNumeroFila2(),
-                leitura.getSaidaFinalMinima(),
-                leitura.getSaidaFinalMaxima()
-        );*/
+        Fila[] leitura = Leitor.lerValores();
+        Simulador sim = new Simulador(leitura);
 
-       // sim.importarNumberos(geraNum(leitura.getTamanho()));
-       // sim.executa();
+       sim.importarNumberos(geraNum(100000));
+       sim.executa();
         System.out.println();
     }
 

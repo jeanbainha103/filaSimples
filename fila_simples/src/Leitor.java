@@ -13,10 +13,12 @@ import java.util.List;
 
 public class Leitor {
 
-    public static Leitura lerValores() {
+    public static Fila[] lerValores() {
         Leitura leitura = new Leitura();
 
         File file = new File("dadosEntrada.txt");
+
+        Fila[] filas = null;
 
         BufferedReader reader;
         try {
@@ -25,7 +27,10 @@ public class Leitor {
             String[] linhaPercorrida = reader.readLine().split("");
             leitura.setNumeroFilas(parseInt(linhaPercorrida[0]));
 
+            filas = new Fila[leitura.getNumeroFilas()];
+
             linhaPercorrida = reader.readLine().split(" ");
+
             leitura.setCapacidadeFila(toIntegerList(linhaPercorrida));
 
             linhaPercorrida = reader.readLine().split(" ");
@@ -43,12 +48,22 @@ public class Leitor {
             linhaPercorrida = reader.readLine().split(" ");
             leitura.setSaidaMaxima(toFloatList(linhaPercorrida));
 
-//            linhaPercorrida = reader.readLine().split(" ");
-//            leitura.setSaidaFila(toIntegerList(linhaPercorrida));
-
             for (int i = 0; i < leitura.getNumeroFilas(); i++) {
+                filas[i] = new Fila();
+                filas[i].setIdFila(i+1);
+                filas[i].setTamanhoFila(leitura.getCapacidadeFila().get(i));
+                filas[i].setNumeroServidores(leitura.getNumeroServidores().get(i));
+                filas[i].setChegadaMinima(leitura.getChegadaMinima().get(i));
+                filas[i].setChegadaMaxima(leitura.getChegadaMaxima().get(i));
+                filas[i].setSaidaminima(leitura.getSaidaMinima().get(i));
+                filas[i].setSaidaMaxima(leitura.getSaidaMaxima().get(i));
+
                 linhaPercorrida = reader.readLine().split(" ");
-                leitura.setSaidaFila(toIntegerList(linhaPercorrida));
+                filas[i].setSaidas((ArrayList<Integer>) toIntegerList(linhaPercorrida));
+                linhaPercorrida = reader.readLine().split(" ");
+                filas[i].setProbalidade(toFloatList(linhaPercorrida));
+
+
             }
 
         } catch (IOException e) {
@@ -57,7 +72,7 @@ public class Leitor {
         }
 
 
-        return leitura;
+        return filas;
     }
 
     private static List<Integer> toIntegerList(String[] linhaPercorrida) {
